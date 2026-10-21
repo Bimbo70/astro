@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import NavBar from '../components/shared/NavBar.astro';
 import '../styles/global.css';
 import {siteInfo} from 'src/consts/site-info'
 
@@ -36,7 +37,8 @@ const { title = siteInfo.title,
 		<ClientRouter />
 	</head>
 	<body class="bg-slate-800 text-slate-100 m-auto max-w-3xl">
-		<main class="mt-10">
+		<NavBar />
+		<main class="mt-10 m-auto max-w-3xl">
 			<slot />
 		</main>
 	</body>
