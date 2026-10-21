@@ -1,50 +1,47 @@
 ---
-import type { GetStaticPaths} from 'astro';
+import Title from '@components/shared/Title.astro';
+import type { GetStaticPaths } from 'astro';
 import type { PokemonListResponse } from '@interfaces/pokemon-list.response';
-
 import PokemonCard from '@components/Pokemons/PokemonCard.astro';
 import MainLayout from '@layouts/MainLayout.astro';
 
 export const getStaticPaths = (async () => {
-
   const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151');
-  const {results} = await response.json() as PokemonListResponse;
+  const { results } = (await response.json()) as PokemonListResponse;
 
-  return results.map( ({name, url}) => ({
-    params: { name: name } ,
-    props: { name: name, url: url },
+  return results.map(({ name, url }) => ({
+    params: { name },
+    props: { name, url },
   }));
-
 }) satisfies GetStaticPaths;
 
 const { name } = Astro.params;
 const { url } = Astro.props;
 
-const id = url.split("/").at(-2);
+const id = url.split('/').at(-2);
 const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`;
 const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;
-
-
-
 ---
+
 <MainLayout
- title={'Pokémon - #${id} ${name}'}
- description={'Información sobre el Pokémon ${name}'}
- image={imageSrc}
- >
-<section class="mt-10 mx-10 flex flex-col justify-center items-center">
-<div>
-<a href="Pokemons/1">Regresar</a>
-<h1 class="text-5xl capitalize">{name}</h1>
-</div>
+  title={`Pokémon - #${id} ${name}`}
+  description={`Información sobre el Pokémon ${name}`}
+  image={imageSrc}
+>
+  <section class="mt-10 mx-10 flex flex-col justify-center items-center">
+    <div>
+      <button onclick="history.back()" class="text-blue-500">
+        Regresar
+      </button>
 
-<PokemonCard name={name} url={url} isBig/>
+      <Title>{name}</Title>
+    </div>
 
-<audio controls class="mt-5">
-    <source src={audioSrc} type="audio/ogg" />
-    Your browser does not support the audio element.
-</audio>
+    <PokemonCard name={name} url={url} isBig />
 
-</section>
+    <audio controls class="mt-5">
+      <source src={audioSrc} type="audio/ogg" />
+      Your browser does not support the audio element.
+    </audio>
+  </section>
 </MainLayout>
-
