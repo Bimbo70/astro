@@ -30,16 +30,16 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
 >
   <section class="mt-10 mx-10 flex flex-col justify-center items-center">
     <div class="flex flex-row">
-  <div>
-    <button onclick="history.back()" class="text-blue-500">Regresar</button>
-    <Title>{name}</Title>
-  </div>
+      <div>
+        <button onclick="history.back()" class="text-blue-500">Regresar</button>
+        <Title>{name}</Title>
+      </div>
 
-  <button id="btn-favorite" class="ml-4 text-red-500" data-name={name} data-id={id}>
-    <Icon name="heart-outline" size={50} />
-    <Icon class="hidden" name="heart-full" size={50} />
-  </button>
-</div>
+      <button id="btn-favorite" class="ml-4 text-red-500" data-name={name} data-id={id}>
+        <Icon data-outline name="heart-outline" size={50} />
+        <Icon data-full class="hidden" name="heart-full" size={50} />
+      </button>
+    </div>
 
     <PokemonCard name={name} url={url} isBig />
 
@@ -51,46 +51,20 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
 </MainLayout>
 
 <script>
-interface FavoritePokemon {
-  name: string;
-  id: number;
-}
+  const handlePageLoad = () => {
+    const btnFavorite = document.querySelector('#btn-favorite') as HTMLButtonElement;
+    if (!btnFavorite) return;
 
+    const heartOutline = btnFavorite.querySelector('[data-outline]') as HTMLElement;
+    const heartFull = btnFavorite.querySelector('[data-full]') as HTMLElement;
 
+    btnFavorite.addEventListener('click', () => {
+      heartOutline.classList.toggle('hidden');
+      heartFull.classList.toggle('hidden');
+    });
+  };
 
-// document.addEventListener('astro:before-preparation', () => {
-//   console.log('before-preparation');
-// });
-// document.addEventListener('astro:after-preparation', () => {
-//   console.log('after-preparation');
-// });
-// document.addEventListener('astro:before-swap', () => {
-//   console.log('before-swap');
-// });
-// document.addEventListener('astro:after-swap', () => {
-//   console.log('after-swap');
-// });
-// document.addEventListener('astro:page-load', () => {
-//   console.log('page-load');
-// });
-
-// document.addEventListener('astro:page-load', () => {
-//   console.log('hola');
-// });
-
-// document.addEventListener('astro:page:load', () => {
-// const btnFavorite = document.querySelector('#btn-favorite'
-// ) as HTMLButtonElement;
-
-// if(!btnFavorite) return;
-//   const name = btnFavorite.dataset.name;
-//   const id = btnFavorite.dataset.id;
-//   btnFavorite.addEventListener('click', () => {
-//     console.log({name, id});
-//   });
-// }
-// )
-
+  handlePageLoad();
 </script>
 
 <style>
@@ -99,6 +73,7 @@ interface FavoritePokemon {
   a {
     @apply hover:underline text-blue-500;
   }
+
   #btn-favorite {
     @apply hover:animate-pulse;
   }
