@@ -51,44 +51,51 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
 </MainLayout>
 
 <script>
-  const getFavorites = (): number[] => {
-    return JSON.parse(localStorage.getItem('favorites') ?? '[]');
+
+import type { FavoritePokemon } from "../../interfaces/favorite-pokemons";
+
+const handlePageLoad = () => {
+  let favoritePokemons: FavoritePokemon[] = JSON.parse(
+    localStorage.getItem('favorites') ?? '[]'
+  );
+
+  const btnFavorite = document.querySelector(
+    '#btn-favorite'
+  ) as HTMLButtonElement;
+
+  if (!btnFavorite) return;
+
+  const name = btnFavorite.dataset.name ?? '';
+  const id = btnFavorite.dataset.id ?? '';
+  const isFavorite = favoritePokemons.some((fav) => fav.name === name);
+
+  const heartOutline = btnFavorite.querySelector(
+    '[data-outline]'
+  );
+  const heartFull = btnFavorite.querySelector('[data-full]');
+
+  if (!heartOutline || !heartFull) return;
+
+  const updateFavoriteIcon = (favorite: boolean) => {
+    heartOutline.classList.toggle('hidden', favorite);
+    heartFull.classList.toggle('hidden', !favorite);
   };
 
-  const handlePageLoad = () => {
-    const btnFavorite = document.querySelector('#btn-favorite') as HTMLButtonElement;
-    if (!btnFavorite) return;
+  updateFavoriteIcon(isFavorite);
 
-    const id = Number(btnFavorite.dataset.id);
+  btnFavorite.addEventListener('click', () => {
+    favoritePokemons = favoritePokemons.filter((favorite) => favorite.name !== name);
 
-    const heartOutline = btnFavorite.querySelector('[data-outline]') as HTMLElement;
-    const heartFull = btnFavorite.querySelector('[data-full]') as HTMLElement;
-
-    if (getFavorites().includes(id)) {
-      heartOutline.classList.add('hidden');
-      heartFull.classList.remove('hidden');
-    } else {
-      heartOutline.classList.remove('hidden');
-      heartFull.classList.add('hidden');
+    if (!isFavorite) {
+      favoritePokemons.push({ id: Number(id), name });
     }
 
-    btnFavorite.addEventListener('click', () => {
-      heartOutline.classList.toggle('hidden');
-      heartFull.classList.toggle('hidden');
+    localStorage.setItem('favorites', JSON.stringify(favoritePokemons));
+    updateFavoriteIcon(!isFavorite);
+  });
+};
 
-      let favorites = getFavorites();
-
-      if (favorites.includes(id)) {
-        favorites = favorites.filter((favId) => favId !== id);
-      } else {
-        favorites.push(id);
-      }
-
-      localStorage.setItem('favorites', JSON.stringify(favorites));
-    });
-  };
-
-  document.addEventListener('astro:page-load', handlePageLoad);
+handlePageLoad();
 </script>
 
 <style>
