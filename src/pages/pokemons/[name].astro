@@ -51,9 +51,15 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
 </MainLayout>
 
 <script>
+  const getFavorites = (): number[] => {
+    return JSON.parse(localStorage.getItem('favorites') ?? '[]');
+  };
+
   const handlePageLoad = () => {
     const btnFavorite = document.querySelector('#btn-favorite') as HTMLButtonElement;
     if (!btnFavorite) return;
+
+    const id = Number(btnFavorite.dataset.id);
 
     const heartOutline = btnFavorite.querySelector('[data-outline]') as HTMLElement;
     const heartFull = btnFavorite.querySelector('[data-full]') as HTMLElement;
@@ -61,10 +67,20 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
     btnFavorite.addEventListener('click', () => {
       heartOutline.classList.toggle('hidden');
       heartFull.classList.toggle('hidden');
+
+      let favorites = getFavorites();
+
+      if (favorites.includes(id)) {
+        favorites = favorites.filter((favId) => favId !== id);
+      } else {
+        favorites.push(id);
+      }
+
+      localStorage.setItem('favorites', JSON.stringify(favorites));
     });
   };
 
-  handlePageLoad();
+  document.addEventListener('astro:page-load', handlePageLoad);
 </script>
 
 <style>
