@@ -1,12 +1,11 @@
 ---
 import { Icon } from 'astro-icon/components';
-import Title from '@components/shared/Title.astro';
-import type { GetStaticPaths } from 'astro';
-import type { PokemonListResponse } from '@interfaces/pokemon-list.response';
-import PokemonCard from '@components/Pokemons/PokemonCard.astro';
-import MainLayout from '@layouts/MainLayout.astro';
+import Title from '../../components/shared/Title.astro';
+import type { PokemonListResponse } from '../../interfaces/pokemon-list.response';
+import PokemonCard from '../../components/Pokemons/PokemonCard.astro';
+import MainLayout from '../../layouts/MainLayout.astro';
 
-export const getStaticPaths = (async () => {
+export const getStaticPaths = async () => {
   const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151');
   const { results } = (await response.json()) as PokemonListResponse;
 
@@ -14,7 +13,7 @@ export const getStaticPaths = (async () => {
     params: { name },
     props: { name, url },
   }));
-}) satisfies GetStaticPaths;
+};
 
 const { name } = Astro.params;
 const { url } = Astro.props;
@@ -30,18 +29,17 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
   image={imageSrc}
 >
   <section class="mt-10 mx-10 flex flex-col justify-center items-center">
-   <div class="flex flex-row">
+    <div class="flex flex-row">
   <div>
     <button onclick="history.back()" class="text-blue-500">Regresar</button>
     <Title>{name}</Title>
   </div>
 
-  <button id="btn-favorite" class="ml-4" data-name={name}data-id={id}>
-    <Icon name="C:\Users\Usuario\OneDrive\Documentos\Astro\astro\src\Icon\heart-outline.svg" size={50} />
-    <Icon name="C:\Users\Usuario\OneDrive\Documentos\Astro\astro\src\Icon\heart-full.svg" size={50} />
+  <button id="btn-favorite" class="ml-4 text-red-500" data-name={name} data-id={id}>
+    <Icon name="heart-outline" size={50} />
+    <Icon class="hidden" name="heart-full" size={50} />
   </button>
 </div>
-    </button>
 
     <PokemonCard name={name} url={url} isBig />
 
@@ -53,28 +51,55 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
 </MainLayout>
 
 <script>
-   interface FavoritePokemon {
-    name: string;
-    id: number;
-   }
-
-document.addEventListener('astro:page:load', () => {
-const btnFavorite = document.querySelector('#btn-favorite'
-) as HTMLButtonElement;
-
-if(!btnFavorite) return;
-  const name = btnFavorite.dataset.name;
-  const id = btnFavorite.dataset.id;
-  btnFavorite.addEventListener('click', () => {
-    console.log({name, id});
-  });
+interface FavoritePokemon {
+  name: string;
+  id: number;
 }
-)
+
+
+
+// document.addEventListener('astro:before-preparation', () => {
+//   console.log('before-preparation');
+// });
+// document.addEventListener('astro:after-preparation', () => {
+//   console.log('after-preparation');
+// });
+// document.addEventListener('astro:before-swap', () => {
+//   console.log('before-swap');
+// });
+// document.addEventListener('astro:after-swap', () => {
+//   console.log('after-swap');
+// });
+// document.addEventListener('astro:page-load', () => {
+//   console.log('page-load');
+// });
+
+// document.addEventListener('astro:page-load', () => {
+//   console.log('hola');
+// });
+
+// document.addEventListener('astro:page:load', () => {
+// const btnFavorite = document.querySelector('#btn-favorite'
+// ) as HTMLButtonElement;
+
+// if(!btnFavorite) return;
+//   const name = btnFavorite.dataset.name;
+//   const id = btnFavorite.dataset.id;
+//   btnFavorite.addEventListener('click', () => {
+//     console.log({name, id});
+//   });
+// }
+// )
 
 </script>
 
 <style>
+  @reference "../../styles/global.css";
+
   a {
     @apply hover:underline text-blue-500;
+  }
+  #btn-favorite {
+    @apply hover:animate-pulse;
   }
 </style>

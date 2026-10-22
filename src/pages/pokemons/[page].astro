@@ -1,19 +1,31 @@
 ---
-import Title from "@components/shared/Title.astro";
-import type { GetStaticPaths } from "astro";
-import type { PokemonListResponse } from "@interfaces/pokemon-list.response";
+import Title from "../../components/shared/Title.astro";
 
-import PokemonCard from "@components/Pokemons/PokemonCard.astro";
-import MainLayout from "@layouts/MainLayout.astro";
+import PokemonCard from "../../components/Pokemons/PokemonCard.astro";
+import MainLayout from "../../layouts/MainLayout.astro";
 
-export const getStaticPaths = (async ({ paginate }) => {
+type Pokemon = { name: string; url: string };
+
+export const getStaticPaths = async ({
+  paginate,
+}: {
+  paginate: (items: Pokemon[], options: { pageSize: number }) => any;
+}) => {
   const resp = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
-  const { results } = await resp.json() as PokemonListResponse;
+  const { results } = await resp.json() as {
+    results: Pokemon[];
+  };
 
   return paginate(results, { pageSize: 20 });
-}) satisfies GetStaticPaths;
+};
 
-const { page } = Astro.props;
+const { page } = Astro.props as {
+  page: {
+    data: Pokemon[];
+    currentPage: number;
+    url: { prev?: string; next?: string };
+  };
+};
 const title = "Pokemon Static";
 ---
 

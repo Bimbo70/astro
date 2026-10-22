@@ -2,7 +2,7 @@
 import { ClientRouter } from 'astro:transitions';
 import NavBar from '../components/shared/NavBar.astro';
 import '../styles/global.css';
-import {siteInfo} from 'src/consts/site-info'
+import { siteInfo } from '../consts/site-info';
 
 
 interface Props {
@@ -40,6 +40,24 @@ const { title = siteInfo.title,
 		<NavBar />
 		<main class="mt-10 m-auto max-w-3xl">
 			<slot />
+			<script>
+  const handlePageLoad = () => {
+    const btnFavorite = document.querySelector(
+      '#btn-favorite'
+    ) as HTMLButtonElement;
+
+    if (!btnFavorite) return;
+
+    const name = btnFavorite.dataset.name;
+    const id = btnFavorite.dataset.id;
+
+    btnFavorite.addEventListener('click', () => {
+      console.log({ name, id });
+    });
+  };
+
+  document.addEventListener('astro:page-load', handlePageLoad);
+</script>
 		</main>
 	</body>
 </html>

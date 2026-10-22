@@ -2,22 +2,15 @@
 
 @layer components {
   .btn {
-    @apply bg-blue-500 p-2 text-white rounded-md;
+    background-color: #3b82f6;
+    padding: 0.5rem;
+    color: #fff;
+    border-radius: 0.375rem;
   }
 
   .disabled {
-    @apply bg-gray-600 text-gray-400;
-  }
-}
-@import "tailwindcss";
-
-@layer components {
-  .btn {
-    @apply bg-blue-500 p-2 text-white rounded-md;
-  }
-
-  .disabled {
-    @apply bg-gray-600 text-gray-400;
+    background-color: #4b5563;
+    color: #9ca3af;
   }
 }
 
