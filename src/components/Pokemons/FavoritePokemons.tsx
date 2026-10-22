@@ -1,27 +1,19 @@
-import type { FavoritePokemon } from "../../interfaces/favorite-pokemons";
-import {For, createSignal} from 'solid-js'
+import { createSignal, For, onMount, type Component } from 'solid-js';
+import type { FavoritePokemon } from '../../interfaces/favorite-pokemons';
+import { FavoritePokemonCard } from './FavoritePokemonCard';
 
+export const FavoritePokemons: Component = () => {
+  const [favorites, setFavorites] = createSignal<FavoritePokemon[]>([]);
 
+  onMount(() => {
+    setFavorites(JSON.parse(localStorage.getItem('favorites') ?? '[]'));
+  });
 
-const getLocalStoragePokemons = (): FavoritePokemon[] =>{
-    const FavoritePoekemons = JSON.parse(
-        localStorage.getItem('favorites') ?? '[]'
-    )
-
-    return FavoritePoekemons;
-}
-
-export const FavoritePoekemons = () => {
-
-const [ Pokemons, setPokemons] = createSignal( getLocalStoragePokemons());
-
-
-return(<div class="grid grid-cols-2 sm:grid-cold-4">
-    <For each={ Pokemons() }>
-        {
-            pokemon => <h1>{pokemon.name}</h1>
-        }
-    </For>   
-</div>)
-
-}
+  return (
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <For each={favorites()}>
+        {(pokemon) => <FavoritePokemonCard pokemon={pokemon} />}
+      </For>
+    </div>
+  );
+};
