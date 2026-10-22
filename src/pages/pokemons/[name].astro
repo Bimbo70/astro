@@ -64,6 +64,14 @@ const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprit
     const heartOutline = btnFavorite.querySelector('[data-outline]') as HTMLElement;
     const heartFull = btnFavorite.querySelector('[data-full]') as HTMLElement;
 
+    if (getFavorites().includes(id)) {
+      heartOutline.classList.add('hidden');
+      heartFull.classList.remove('hidden');
+    } else {
+      heartOutline.classList.remove('hidden');
+      heartFull.classList.add('hidden');
+    }
+
     btnFavorite.addEventListener('click', () => {
       heartOutline.classList.toggle('hidden');
       heartFull.classList.toggle('hidden');
